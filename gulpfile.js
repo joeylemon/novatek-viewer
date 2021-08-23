@@ -2,6 +2,7 @@ const exec = require('child_process').exec
 const path = require('path')
 const gulp = require('gulp')
 const babel = require('gulp-babel')
+const sourcemaps = require('gulp-sourcemaps')
 const css = require('gulp-clean-css')
 const livereload = require('gulp-livereload')
 
@@ -20,7 +21,9 @@ gulp.task('css', () => {
 
 gulp.task('js', () => {
     return gulp.src(['main.js', 'src/**/*.js'])
+        .pipe(sourcemaps.init())
         .pipe(babel())
+        .pipe(sourcemaps.write('.', { sourceRoot: __dirname }))
         .pipe(gulp.dest('app/'))
         .pipe(livereload())
 })

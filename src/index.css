@@ -1,10 +1,13 @@
-body {
-    margin: 0px;
+@font-face {
+    font-family: Roboto-Bold;
+    src: url(assets/Roboto-Bold.ttf);
 }
 
-.hello {
-    font-family: "Century Gothic";
-    width: 500px;
-    margin: 70px auto;
-    text-align: center;
+@font-face {
+    font-family: Cabin;
+    src: url(assets/Cabin.ttf);
+}
+
+body {
+    margin: 0px;
 }
