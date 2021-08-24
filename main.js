@@ -2,6 +2,7 @@ import electron from 'electron'
 import path from 'path'
 import url from 'url'
 import 'babel-polyfill'
+import isDev from 'electron-is-dev'
 
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -10,12 +11,15 @@ let mainWindow
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 350,
+        height: 320,
         webPreferences: {
             nodeIntegration: true
         }
     })
+
+    mainWindow.setResizable(false)
+    if (isDev) { mainWindow.webContents.openDevTools({ mode: 'detach' }) }
 
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),

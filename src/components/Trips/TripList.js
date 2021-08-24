@@ -1,13 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import TripListItem from '../TripListItem'
+import TripListItem from './TripListItem'
 
 const Wrapper = styled.div`
   width: 100%;
 `
 
-const TripList = (props) => {
+const TripList = () => {
     const trips = useSelector(state => state.trips)
     console.log(trips)
     return (

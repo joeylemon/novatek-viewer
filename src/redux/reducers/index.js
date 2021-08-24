@@ -1,6 +1,7 @@
 import { ACTIONS } from '../actions'
 
 const initialState = {
+    activeTrip: undefined,
     trips: [
         {
             date: new Date('2021-05-15T17:36:41-04:00'),
@@ -11,6 +12,10 @@ const initialState = {
         {
             date: new Date('2021-09-12T12:37:14-04:00'),
             duration: '00:32:10'
+        },
+        {
+            date: new Date('2020-04-12T17:14:14-04:00'),
+            duration: '00:22:43'
         }
     ]
 }
@@ -20,6 +25,10 @@ function rootReducer (state = initialState, action) {
     switch (type) {
     case ACTIONS.ADD_TRIP: {
         return { ...state, trips: state.trips.concat(payload) }
+    }
+
+    case ACTIONS.SET_ACTIVE_TRIP: {
+        return { ...state, activeTrip: payload }
     }
     }
 
