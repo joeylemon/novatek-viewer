@@ -1,69 +1,18 @@
-# Electrate
+# Novatek Dashcam Footage Viewer with GPS Information
 
-<p align="center"> 
-  <img src="https://github.com/mmick66/electrate/blob/master/assets/logo.png">
-</p>
+This Electron-based desktop application provides a free and open-source way to view Novatek-based dashcam video files alongside realtime GPS information.
 
-This is a simple [Electron](https://electronjs.org/) + [React.js](https://reactjs.org/) template (with live reload). It was designed to work without the need of a development server running in the background, like so many other templates, and it's hence free of cross domain request constraints ([CORS](https://reactjs.org/)). It's further explained [in my article on Medium](https://medium.com/@michael.m/creating-an-electron-and-react-template-5173d086549a).
+## Motivation
 
-## Installing
+Novatek-based dashcams save GPS-encoded video files in a non-standard format, forcing users to use clunky or paid applications to view their footage alongside the GPS information. Viofo's officially recommended application for viewing the GPS information is https://dashcamviewer.com/, which costs between $35-$75 dollars depending on the version. This repository aims to provide a free application that matches or exceeds the quality of alternate viewers on the internet, prioritizing the user interface with a modern design and the user experience with ease-of-use.
 
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+## Supported Dashcams
 
-```bash
-# Clone this repository
-git clone https://github.com/mmick66/electrate my-app
-# Go into the repository
-cd my-app
-# Install dependencies
-npm install
-```
+The following list of dashcams have been confirmed to be compatible with this application:
 
-## Running
-
-```
-npm run start
-```
-
-## Testing
-
-The tool of choice is [Jest](https://facebook.github.io/jest/docs/en/tutorial-react.html) as used at Facebook. Create files with the extension `*.test.js` and they will be run through
-
-```
-npm run test
-```
-
-## Packaging
-
-Replace the icon inside the `build` folder and run
-
-```bash
-npm run release
-```
-
-Check the `dist` folder for the app
-
-
-## How Electron Works with React
-
-This template compiles all `*.js` files in `src` into standard JS and copies it to `app`. There it includes `*.html` and `*.css` together with the `main.js` start file. From then it runs and packages using `gulp` as run through `npm`.
-
-
-<p align="center"> 
-  <img src="https://preview.ibb.co/jF9Akx/electron_sequence.png" alt="electron_sequence" border="0">
-</p>
-
-
-## Extending the Template
-
-Some useful tools include:
-
-1. [Spectron](https://electronjs.org/spectron)
-2. [Karma](https://karma-runner.github.io/2.0/index.html) + [Jasmine](https://jasmine.github.io/)
-3. [Ant Design](https://ant.design/) (a React based UI Framework)
-
-
-## Copyright
-
-The template is made available through the [Creative Commons Licence](https://creativecommons.org/publicdomain/zero/1.0/). The logo icon was provided by [Vecteezy](https://www.vecteezy.com/).
-
+| Dashcam  | Compatible |
+| -------  | ---------- |
+| VIOFO A129 Pro Duo | ✅ |
+| VIOFO A129 Plus Duo | ✅ |
+| VIOFO A129 | ✅ |
+| VIOFO A119 | ✅ |
