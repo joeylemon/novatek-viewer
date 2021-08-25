@@ -1,10 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Icon = ({ className, style, icon }) => {
+const Icon = ({ className, style, icon, spin }) => {
+    let faClass = `fas fa-${icon}`
+    if (spin) faClass += ' fa-spin'
+
     return (
         <span className={'icon ' + className} style={style}>
-            <i className={`fas fa-${icon}`}></i>
+            <i className={faClass}></i>
         </span>
     )
 }
@@ -12,7 +15,8 @@ const Icon = ({ className, style, icon }) => {
 Icon.propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,
-    icon: PropTypes.string
+    icon: PropTypes.string,
+    spin: PropTypes.bool
 }
 
 export default Icon

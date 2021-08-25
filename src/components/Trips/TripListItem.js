@@ -66,7 +66,7 @@ const TripListItem = ({ trip }) => {
                         </TripInformation>
                     </Column>
                     <Column style={{ textAlign: 'right' }}>
-                        <JumpIcon icon='spinner fa-spin' />
+                        <JumpIcon icon='chevron-right' />
                     </Column>
                 </Columns>
             </UnstyledLink>

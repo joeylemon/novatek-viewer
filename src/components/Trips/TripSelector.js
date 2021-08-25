@@ -4,7 +4,7 @@ import StyledDropzone from '../Utils/StyledDropzone'
 import getTrips from '../../services/TripService'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { setTripList } from '../../redux/actions'
+import { setTripList, setLoading } from '../../redux/actions'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,6 +17,7 @@ const TripSelector = () => {
     const history = useHistory()
 
     const handleDrop = files => {
+        dispatch(setLoading(true))
         const trips = getTrips(files)
         console.log(files)
         console.log(trips)
