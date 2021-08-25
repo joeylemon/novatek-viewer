@@ -8,11 +8,12 @@ const Wrapper = styled.div`
 
 const TripView = () => {
     const activeTrip = useSelector(state => state.activeTrip)
-    console.log(activeTrip)
+    const { formattedStartDate, formattedStartTime, formattedEndTime, duration } = activeTrip.getDateInformation()
+
     return (
         <Wrapper>
-            <p>{activeTrip.startDate.toString()}</p>
-            <p>{activeTrip.duration}</p>
+            <p>{formattedStartDate} from {formattedStartTime} to {formattedEndTime}</p>
+            <p>{duration}</p>
         </Wrapper>
     )
 }

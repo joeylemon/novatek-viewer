@@ -33,7 +33,7 @@ export function getTempDirectory () {
  */
 export function getAssetPath (file) {
     const appPath = getAppPath()
-    return path.join(appPath, 'assets', file)
+    return path.join(appPath, 'src', 'assets', file)
 }
 
 /**

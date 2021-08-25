@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import moment from 'moment'
 import { Columns, Column, Icon } from '../Bulma'
 import UnstyledLink from '../Utils/UnstyledLink'
 import { setActiveTrip } from '../../redux/actions'
+import { getAssetPath } from '../../utils/utils'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -42,10 +42,15 @@ const JumpIcon = styled(Icon)`
 
 const TripListItem = ({ trip }) => {
     const dispatch = useDispatch()
-    const thumbnailPath = trip.getThumbnail()
-    const momentDate = moment(trip.date)
-    const formattedDate = momentDate.format('MMMM Do YYYY')
-    const formattedTime = momentDate.format('h:mm:ss a')
+    const [thumbnailPath, setThumbnailPath] = useState(getAssetPath('empty-thumbnail.jpg'))
+    const { formattedStartDate, formattedStartTime, duration } = trip.getDateInformation()
+
+    useEffect(() => {
+        trip.getThumbnail().then(path => {
+            console.log('got path in useEffect', path)
+            setThumbnailPath(path)
+        })
+    })
 
     const handleClick = () => {
         dispatch(setActiveTrip(trip))
@@ -60,9 +65,9 @@ const TripListItem = ({ trip }) => {
                     </Column>
                     <Column isNarrow style={{ paddingLeft: '0px' }}>
                         <TripInformation>
-                            <Title>{formattedDate}</Title>
-                            <Subtitle>{formattedTime}</Subtitle>
-                            <Subtitle>{trip.duration}</Subtitle>
+                            <Title>{formattedStartDate}</Title>
+                            <Subtitle>{formattedStartTime}</Subtitle>
+                            <Subtitle>{duration}</Subtitle>
                         </TripInformation>
                     </Column>
                     <Column style={{ textAlign: 'right' }}>

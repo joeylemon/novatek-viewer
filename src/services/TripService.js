@@ -1,4 +1,5 @@
-import { execSync } from 'child_process'
+import { exec } from 'child_process'
+import moment from 'moment'
 import fs from 'fs'
 import ffmpegPath from 'ffmpeg-static'
 import { getThumbnailPath } from '../utils/utils'
@@ -10,7 +11,7 @@ class Trip {
         this.files = files || []
         this.startDate = undefined
         this.endDate = undefined
-        this.duration = '12:15:44'
+        this.duration = '00:00:00'
         this.thumbnailPath = undefined
         this.updateDates()
     }
@@ -23,6 +24,31 @@ class Trip {
 
         this.startDate = this.files[0].lastModifiedDate
         this.endDate = this.files[this.files.length - 1].lastModifiedDate
+    }
+
+    /**
+     * Get the duration of the trip as the difference between dates
+     * @returns {String} The duration in HH:mm:ss
+     */
+    getDuration () {
+        const duration = moment(this.endDate).diff(this.startDate)
+        return moment.utc(duration).format('HH:mm:ss')
+    }
+
+    /**
+     * Get the date information about this trip
+     * @returns {Object} The date information
+     */
+    getDateInformation () {
+        const mStartDate = moment(this.startDate)
+        const mEndDate = moment(this.endDate)
+        return {
+            formattedStartDate: mStartDate.format('MMMM Do YYYY'),
+            formattedStartTime: mStartDate.format('h:mm:ss a'),
+            formattedEndDate: mEndDate.format('MMMM Do YYYY'),
+            formattedEndTime: mEndDate.format('h:mm:ss a'),
+            duration: this.getDuration()
+        }
     }
 
     /**
@@ -55,20 +81,23 @@ class Trip {
      * @returns {String} The path to the thumbnail for this trip
      */
     getThumbnail () {
-        if (this.thumbnailPath) return this.thumbnailPath
-        if (this.files.length === 0) throw new Error('thumbnail was attempted to be generated but there are no files associated with this trip')
+        return new Promise((resolve, reject) => {
+            if (this.thumbnailPath) return resolve(this.thumbnailPath)
+            if (this.files.length === 0) return reject(new Error('thumbnail was attempted to be generated but there are no files associated with this trip'))
 
-        const firstVideo = this.files[0]
-        const thumbnailPath = getThumbnailPath(firstVideo.name)
-        if (fs.existsSync(thumbnailPath)) {
-            this.thumbnailPath = thumbnailPath
-            return this.thumbnailPath
-        }
+            const firstVideo = this.files[0]
+            const thumbnailPath = getThumbnailPath(firstVideo.name)
+            if (fs.existsSync(thumbnailPath)) {
+                this.thumbnailPath = thumbnailPath
+                return resolve(this.thumbnailPath)
+            }
 
-        execSync(`"${ffmpegPath}" -y -ss 00:00:01.00 -i "${firstVideo.path}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "${thumbnailPath}"`)
-
-        this.thumbnailPath = thumbnailPath
-        return this.thumbnailPath
+            exec(`"${ffmpegPath}" -y -ss 00:00:01.00 -i "${firstVideo.path}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "${thumbnailPath}"`, err => {
+                if (err) return reject(err)
+                this.thumbnailPath = thumbnailPath
+                return resolve(this.thumbnailPath)
+            })
+        })
     }
 }
 
