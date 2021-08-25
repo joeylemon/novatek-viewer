@@ -41,18 +41,11 @@ const JumpIcon = styled(Icon)`
 `
 
 const TripListItem = ({ trip }) => {
-    const [thumbnailPath, setThumbnailPath] = useState('')
     const dispatch = useDispatch()
+    const thumbnailPath = trip.getThumbnail()
     const momentDate = moment(trip.date)
     const formattedDate = momentDate.format('MMMM Do YYYY')
     const formattedTime = momentDate.format('h:mm:ss a')
-
-    useEffect(() => {
-        trip.getThumbnail().then(path => {
-            console.log('got path in useEffect', path)
-            setThumbnailPath(path)
-        })
-    })
 
     const handleClick = () => {
         dispatch(setActiveTrip(trip))
@@ -73,7 +66,7 @@ const TripListItem = ({ trip }) => {
                         </TripInformation>
                     </Column>
                     <Column style={{ textAlign: 'right' }}>
-                        <JumpIcon icon='chevron-right' />
+                        <JumpIcon icon='spinner fa-spin' />
                     </Column>
                 </Columns>
             </UnstyledLink>

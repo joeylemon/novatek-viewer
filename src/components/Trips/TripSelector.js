@@ -17,8 +17,8 @@ const TripSelector = () => {
     const history = useHistory()
 
     const handleDrop = files => {
-        console.log(files)
         const trips = getTrips(files)
+        console.log(files)
         console.log(trips)
         dispatch(setTripList(trips))
         history.push('/trips')

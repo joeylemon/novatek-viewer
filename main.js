@@ -1,5 +1,6 @@
 import electron from 'electron'
 import path from 'path'
+import fs from 'fs'
 import url from 'url'
 import 'babel-polyfill'
 import isDev from 'electron-is-dev'
@@ -9,6 +10,11 @@ const ipc = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
 
 let mainWindow
+
+const setupEnvironment = () => {
+    const tempDir = path.join(app.getPath('temp'), 'novatek-viewer')
+    if (fs.existsSync(tempDir)) { fs.rmdirSync(tempDir, { recursive: true }) }
+}
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
@@ -34,7 +40,10 @@ const createWindow = () => {
     })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+    setupEnvironment()
+    createWindow()
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -49,5 +58,9 @@ app.on('activate', () => {
 })
 
 ipc.on('get-app-path', function (event, arg) {
-    event.sender.send('get-app-path-reply', app.getAppPath())
+    event.returnValue = app.getAppPath()
+})
+
+ipc.on('get-temp-dir', function (event, arg) {
+    event.returnValue = app.getPath('temp')
 })

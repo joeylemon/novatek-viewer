@@ -1,8 +1,7 @@
 import { execSync } from 'child_process'
 import fs from 'fs'
 import ffmpegPath from 'ffmpeg-static'
-import path from 'path'
-import { getAppPath } from '../utils/utils'
+import { getThumbnailPath } from '../utils/utils'
 
 const TEN_MINUTES_MS = 600000
 
@@ -56,29 +55,20 @@ class Trip {
      * @returns {String} The path to the thumbnail for this trip
      */
     getThumbnail () {
-        return new Promise((resolve, reject) => {
-            if (this.thumbnailPath) resolve(this.thumbnailPath)
-            if (this.files.length === 0) reject(new Error('thumbnail was attempted to be generated but there are no files associated with this trip'))
+        if (this.thumbnailPath) return this.thumbnailPath
+        if (this.files.length === 0) throw new Error('thumbnail was attempted to be generated but there are no files associated with this trip')
 
-            const firstVideo = this.files[0]
-            getAppPath().then(appPath => {
-                const thumbnailPath = path.join(appPath, 'thumbnails', firstVideo.name).replace(/mp4|MP4/, 'jpg')
+        const firstVideo = this.files[0]
+        const thumbnailPath = getThumbnailPath(firstVideo.name)
+        if (fs.existsSync(thumbnailPath)) {
+            this.thumbnailPath = thumbnailPath
+            return this.thumbnailPath
+        }
 
-                if (fs.existsSync(thumbnailPath)) {
-                    this.thumbnailPath = thumbnailPath
-                    return resolve(this.thumbnailPath)
-                }
+        execSync(`"${ffmpegPath}" -y -ss 00:00:01.00 -i "${firstVideo.path}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "${thumbnailPath}"`)
 
-                try {
-                    execSync(`"${ffmpegPath}" -y -ss 00:00:01.00 -i "${firstVideo.path}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "${thumbnailPath}"`)
-
-                    this.thumbnailPath = thumbnailPath
-                    resolve(this.thumbnailPath)
-                } catch (err) {
-                    resolve(err)
-                }
-            })
-        })
+        this.thumbnailPath = thumbnailPath
+        return this.thumbnailPath
     }
 }
 
