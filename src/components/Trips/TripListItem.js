@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -36,15 +36,23 @@ const Subtitle = styled.p`
 `
 
 const JumpIcon = styled(Icon)`
-  font-size: 24px;
+  font-size: 16px;
   margin-right: 10px;
 `
 
 const TripListItem = ({ trip }) => {
+    const [thumbnailPath, setThumbnailPath] = useState('')
     const dispatch = useDispatch()
     const momentDate = moment(trip.date)
     const formattedDate = momentDate.format('MMMM Do YYYY')
     const formattedTime = momentDate.format('h:mm:ss a')
+
+    useEffect(() => {
+        trip.getThumbnail().then(path => {
+            console.log('got path in useEffect', path)
+            setThumbnailPath(path)
+        })
+    })
 
     const handleClick = () => {
         dispatch(setActiveTrip(trip))
@@ -55,7 +63,7 @@ const TripListItem = ({ trip }) => {
             <UnstyledLink to="/trip" onClick={handleClick}>
                 <Columns isMobile isVerticalCentered>
                     <Column isNarrow style={{ paddingBottom: '0px', paddingRight: '0px', paddingTop: '0px' }}>
-                        <Preview src='assets/test.png' />
+                        <Preview src={thumbnailPath} />
                     </Column>
                     <Column isNarrow style={{ paddingLeft: '0px' }}>
                         <TripInformation>
@@ -65,7 +73,7 @@ const TripListItem = ({ trip }) => {
                         </TripInformation>
                     </Column>
                     <Column style={{ textAlign: 'right' }}>
-                        <JumpIcon icon='arrow-alt-circle-right' />
+                        <JumpIcon icon='chevron-right' />
                     </Column>
                 </Columns>
             </UnstyledLink>

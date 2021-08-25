@@ -11,7 +11,7 @@ const TripView = () => {
     console.log(activeTrip)
     return (
         <Wrapper>
-            <p>{activeTrip.date.toString()}</p>
+            <p>{activeTrip.startDate.toString()}</p>
             <p>{activeTrip.duration}</p>
         </Wrapper>
     )

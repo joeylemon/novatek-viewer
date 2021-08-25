@@ -5,6 +5,7 @@ import 'babel-polyfill'
 import isDev from 'electron-is-dev'
 
 const app = electron.app
+const ipc = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
 
 let mainWindow
@@ -14,7 +15,8 @@ const createWindow = () => {
         width: 350,
         height: 320,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            enableRemoteModule: true
         }
     })
 
@@ -44,4 +46,8 @@ app.on('activate', () => {
     if (mainWindow === null) {
         createWindow()
     }
+})
+
+ipc.on('get-app-path', function (event, arg) {
+    event.sender.send('get-app-path-reply', app.getAppPath())
 })

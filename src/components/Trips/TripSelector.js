@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import StyledDropzone from '../Utils/StyledDropzone'
-import createTrips from '../../services/TripCreator'
+import getTrips from '../../services/TripService'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { setTripList } from '../../redux/actions'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -10,10 +13,15 @@ const Wrapper = styled.div`
 `
 
 const TripSelector = () => {
+    const dispatch = useDispatch()
+    const history = useHistory()
+
     const handleDrop = files => {
         console.log(files)
-        const creator = createTrips(files)
-        console.log(creator)
+        const trips = getTrips(files)
+        console.log(trips)
+        dispatch(setTripList(trips))
+        history.push('/trips')
     }
 
     return (

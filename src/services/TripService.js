@@ -1,4 +1,8 @@
-// import ffmpegPath from 'ffmpeg-static'
+import { execSync } from 'child_process'
+import fs from 'fs'
+import ffmpegPath from 'ffmpeg-static'
+import path from 'path'
+import { getAppPath } from '../utils/utils'
 
 const TEN_MINUTES_MS = 600000
 
@@ -7,6 +11,8 @@ class Trip {
         this.files = files || []
         this.startDate = undefined
         this.endDate = undefined
+        this.duration = '12:15:44'
+        this.thumbnailPath = undefined
         this.updateDates()
     }
 
@@ -44,6 +50,36 @@ class Trip {
     getRearDashcamFiles () {
         return this.files.filter(e => e.name.toLowerCase().includes('r.mp4'))
     }
+
+    /**
+     * Get the thumbnail for this trip
+     * @returns {String} The path to the thumbnail for this trip
+     */
+    getThumbnail () {
+        return new Promise((resolve, reject) => {
+            if (this.thumbnailPath) resolve(this.thumbnailPath)
+            if (this.files.length === 0) reject(new Error('thumbnail was attempted to be generated but there are no files associated with this trip'))
+
+            const firstVideo = this.files[0]
+            getAppPath().then(appPath => {
+                const thumbnailPath = path.join(appPath, 'thumbnails', firstVideo.name).replace(/mp4|MP4/, 'jpg')
+
+                if (fs.existsSync(thumbnailPath)) {
+                    this.thumbnailPath = thumbnailPath
+                    return resolve(this.thumbnailPath)
+                }
+
+                try {
+                    execSync(`"${ffmpegPath}" -y -ss 00:00:01.00 -i "${firstVideo.path}" -vf "scale=320:320:force_original_aspect_ratio=decrease" -vframes 1 "${thumbnailPath}"`)
+
+                    this.thumbnailPath = thumbnailPath
+                    resolve(this.thumbnailPath)
+                } catch (err) {
+                    resolve(err)
+                }
+            })
+        })
+    }
 }
 
 /**
@@ -51,7 +87,7 @@ class Trip {
  * @param {Array} files The array of mp4 files
  * @returns {Array<Trip>} An array of trips grouped by date
  */
-function getTrips (files) {
+export default function getTrips (files) {
     const sortedFiles = files.sort((a, b) => a.lastModified > b.lastModified ? 1 : -1)
     const trips = []
 
@@ -73,13 +109,4 @@ function getTrips (files) {
     }
 
     return trips
-}
-
-// function mergeVideos (trip) {
-
-// }
-
-export default function createTrips (files) {
-    const trips = getTrips(files)
-    console.log(trips)
 }

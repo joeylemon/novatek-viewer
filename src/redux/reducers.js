@@ -23,8 +23,8 @@ const initialState = {
 function rootReducer (state = initialState, action) {
     const { payload, type } = action
     switch (type) {
-    case ACTIONS.ADD_TRIP: {
-        return { ...state, trips: state.trips.concat(payload) }
+    case ACTIONS.SET_TRIP_LIST: {
+        return { ...state, trips: payload }
     }
 
     case ACTIONS.SET_ACTIVE_TRIP: {
